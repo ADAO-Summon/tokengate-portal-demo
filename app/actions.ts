@@ -16,9 +16,16 @@ export async function getSecretData() {
     const session = await checkLogin()
     if (!session) return null
 
-    
+    return await getUsersPubkeyHash(session.accessToken)
+}
 
+async function getUsersPubkeyHash(access_token: string) {
+    const res = await fetch('https://testnetapi.summonplatform.io/v1/oauth/userinfo', {
+        headers: {
+            'Authorization': `Bearer ${access_token}`
+        }
+    })
+    const json = await res.json()
+    return json.stake_pubkey_hash_hex
 
-
-    return Promise.resolve("secret data")
 }
